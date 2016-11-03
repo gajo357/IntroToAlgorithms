@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CliqueModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IntroToAlgorithms.py" />
   </ItemGroup>
   <PropertyGroup>
