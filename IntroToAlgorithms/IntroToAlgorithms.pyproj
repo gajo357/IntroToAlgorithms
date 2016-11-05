@@ -25,7 +25,13 @@
     <Compile Include="CliqueModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CombinationLockModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IntroToAlgorithms.py" />
+    <Compile Include="StarModule.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

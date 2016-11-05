@@ -2,9 +2,11 @@
 # How many edges in a complete graph on n nodes? 
 # 
 
-import CliqueModule
-from CliqueModule import clique_numberOfEdges
+import unittest
+from CliqueModule import *
+from StarModule import *
+from CombinationLockModule import *
 
-print(clique_numberOfEdges(9))
+unittest.main()
 
 
