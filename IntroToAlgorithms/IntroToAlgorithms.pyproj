@@ -22,13 +22,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BridgeEdgesModule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CentralityModule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CheckPairwiseConnectivityModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="CliqueModule.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CombinationLockModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DictGraphModule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EulerianPathModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IntroToAlgorithms.py" />
+    <Compile Include="MarkComponentNoRecursionModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StarModule.py">
       <SubType>Code</SubType>
     </Compile>
