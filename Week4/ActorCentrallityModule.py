@@ -58,13 +58,14 @@ def up_heapify(L, i):
 
 def read_file(filename):
     # Read an undirected graph in CSV format. Each line is an edge
-    tsv = csv.reader(open(filename), delimiter='\t')
     G = {}
     actors = []
-    for (actor, title, year) in tsv:
-        make_link(G, actor, title + ' ' + year)
-        if actor not in actors:
-            actors.append(actor)
+    with open(filename) as f:
+        tsv = csv.reader(f, delimiter='\t')
+        for (actor, title, year) in tsv:
+            make_link(G, actor, title + ' ' + year)
+            if actor not in actors:
+                actors.append(actor)
     return (actors, G)
 
 class actor_node:
