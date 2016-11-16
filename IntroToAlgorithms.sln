@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "IntroToAlgorithms", "IntroToAlgorithms\IntroToAlgorithms.pyproj", "{1E2A8126-0E46-439F-91AD-8E2230FCC1CC}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Week4", "Week4\Week4.pyproj", "{1255D764-D3C3-41BA-82F1-8A5F7DEE3226}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1E2A8126-0E46-439F-91AD-8E2230FCC1CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E2A8126-0E46-439F-91AD-8E2230FCC1CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1255D764-D3C3-41BA-82F1-8A5F7DEE3226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1255D764-D3C3-41BA-82F1-8A5F7DEE3226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
