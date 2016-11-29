@@ -28,6 +28,9 @@
     <Compile Include="HeapModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HeapWithClassModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LessonModule.py">
       <SubType>Code</SubType>
     </Compile>

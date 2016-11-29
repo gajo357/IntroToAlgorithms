@@ -6,8 +6,7 @@
     <ProjectGuid>80b96f71-50c3-42a4-856e-fbd7b92466e2</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>Week5_LinkWeight.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>..\Week4\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>Week5_LinkWeight</Name>
@@ -28,10 +27,20 @@
     <Compile Include="ComicCharactersModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DijkstraHeapModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Week5_LinkWeight.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="marvel_chars.tsv" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Week4\Week4.pyproj">
+      <Name>Week4</Name>
+      <Project>{1255d764-d3c3-41ba-82f1-8a5f7dee3226}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

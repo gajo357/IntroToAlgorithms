@@ -49,4 +49,9 @@ class test_comic_characters(unittest.TestCase):
         chars_graph = create_characters_graph(full_graph, characters)
         strongest_link = find_strongest_link(chars_graph)
 
-        self.assertEqual(strongest_link, ('HUMAN TORCH/JOHNNY S', 'THING/BENJAMIN J. GR'))
+        try:
+            self.assertEqual(strongest_link, ('HUMAN TORCH/JOHNNY S', 'THING/BENJAMIN J. GR'))
+            pass
+        except:
+            self.assertEqual(strongest_link, ('THING/BENJAMIN J. GR', 'HUMAN TORCH/JOHNNY S'))
+            pass

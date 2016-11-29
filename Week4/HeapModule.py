@@ -69,6 +69,10 @@ def down_heapify(L, i):
         down_heapify(L, right_child(i))
         return
 
+def add_to_heap(heap, v):
+    heap.append(v)
+    up_heapify(heap, len(heap) - 1)
+
 # build_heap
 def build_heap(L):
     for i in range(len(L)-1, -1, -1):
