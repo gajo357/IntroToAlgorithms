@@ -1,63 +1,80 @@
-import HeapModule
+from HeapModule import parent
+from HeapModule import one_child
+from HeapModule import right_child
+from HeapModule import left_child
+from HeapModule import is_leaf
 
 class heap_node:
     def __init__(self, name, value):
         self.name = name
         self.value = value
+        self.index = -1
 
+def swap(heap, i, j):
+    heap[i].index = j
+    heap[j].index = i
+    (heap[i], heap[j]) = (heap[j], heap[i])  
+    
 # Call this routine if the heap rooted at i satisfies the heap property
 # *except* perhaps i to its immediate children
-def down_heapify(L, i):
+def down_heapify(heap, i):
     # If i is a leaf, heap property holds
-    if HeapModule.is_leaf(L, i): 
+    if is_leaf(heap, i): 
         return
+
+    left_index = left_child(i)
+    right_index = right_child(i)
+    
     # If i has one child...
-    if HeapModule.one_child(L, i):
+    if one_child(heap, i):
         # check heap property
-        if L[i].value > L[HeapModule.left_child(i)].value:
+        if heap[i].value > heap[left_index].value:
             # If it fails, swap, fixing i and its child (a leaf)
-            (L[i], L[HeapModule.left_child(i)]) = (L[HeapModule.left_child(i)], L[i])
+            swap(heap, i, left_index)
         return
     # If i has two children...
     # check heap property
-    if min(L[HeapModule.left_child(i)].value, L[HeapModule.right_child(i)].value) >= L[i].value: 
+    if min(heap[left_index].value, heap[right_index].value) >= heap[i].value: 
         return
     # If it fails, see which child is the smaller
     # and swap i's value into that child
     # Afterwards, recurse into that child, which might violate
-    if L[HeapModule.left_child(i)].value < L[HeapModule.right_child(i)].value:
+    if heap[left_index].value < heap[right_index].value:
         # Swap into left child
-        (L[i], L[HeapModule.left_child(i)]) = (L[HeapModule.left_child(i)], L[i])
-        down_heapify(L, HeapModule.left_child(i))
+        swap(heap, i, left_index)
+        down_heapify(heap, left_index)
         return
     else:
-        (L[i], L[HeapModule.right_child(i)]) = (L[HeapModule.right_child(i)], L[i])
-        down_heapify(L, HeapModule.right_child(i))
+        swap(heap, i, right_index)
+        down_heapify(heap, right_index)
         return
     
-def up_heapify(L, i):
+def up_heapify(heap, i):
     # this is the root node, we're done
     if i == 0:
         return
-    p = HeapModule.parent(i)
+    p = parent(i)
     # nothing to do, we are satisfied
-    if L[i].value >= L[p].value:
+    if heap[i].value >= heap[p].value:
         return
     
     # swap parrent and the child
-    (L[i], L[p]) = (L[p], L[i])
+    swap(heap, i, p)
     # up heapify starting from the parent
-    up_heapify(L, p)
+    up_heapify(heap, p)
     return
 
-def remove_min(L):
-    minimum = L[0]
-    temp = L.pop()
-    if len(L) > 0:
-        L[0] = temp
-        down_heapify(L, 0)
+def remove_min(heap):
+    minimum = heap[0]
+    temp = heap.pop()
+    if len(heap) > 0:
+        heap[0] = temp
+        temp.index = 0
+        down_heapify(heap, 0)
     return minimum
 
 def add_to_heap(heap, v):
+    index = len(heap)
     heap.append(v)
-    up_heapify(heap, len(heap) - 1)
+    v.index = index
+    up_heapify(heap, index)

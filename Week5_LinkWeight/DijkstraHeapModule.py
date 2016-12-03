@@ -1,52 +1,44 @@
 import unittest
-import HeapWithClassModule
-from HeapWithClassModule import heap_node
-
-#
-# The code below uses a linear
-# scan to find the unfinished node
-# with the smallest distance from
-# the source.
-#
-# Modify it to use a heap instead
-# 
-
-def shortest_dist_node(dist):
-    best_node = 'undefined'
-    best_value = 1000000
-    for v in dist:
-        if dist[v] < best_value:
-            (best_node, best_value) = (v, dist[v])
-    return best_node
+from HeapWithClassModule import *
 
 def dijkstra(G,v):
+    # distances so far
     dist_so_far = []
-    HeapWithClassModule.add_to_heap(dist_so_far, heap_node(v, 0))
+    # dictionary of nodes for quick access
+    dist_dict = {}
+    # final list of distances
     final_dist = {}
-    while len(dist_so_far) > 0: #len(final_dist) < len(G):
-        wNode = HeapWithClassModule.remove_min(dist_so_far)
+
+    # create the initial node with distance 0
+    node = heap_node(v, 0)
+    # add it to the heap and to the dictionary
+    dist_dict[node.name] = node
+    add_to_heap(dist_so_far, node)
+    
+    while len(dist_so_far) > 0:
+        # find the closes node
+        wNode = remove_min(dist_so_far)
         w = wNode.name
-        #w = shortest_dist_node(dist_so_far)
+        # remove it from the dictionary for good measure
+        dist_dict[w] = None
         # lock it down!
         final_dist[w] = wNode.value
-        #del dist_so_far[w]
         for x in G[w]:
+            # only need the nodes that are not over and done
             if x not in final_dist:
-                node = None
-                for i in range(len(dist_so_far)):
-                    if dist_so_far[i].name == x:
-                        node = dist_so_far[i]
-                        break
-                newValue = final_dist[w] + G[w][x]
-                if node is None:
-                    HeapWithClassModule.add_to_heap(dist_so_far, heap_node(x, newValue))
-                elif newValue < node.value:
-                    node.value = newValue
-                    HeapWithClassModule.up_heapify(dist_so_far, i)
-                #if x not in dist_so_far:
-                #    dist_so_far[x] = final_dist[w] + G[w][x]
-                #elif final_dist[w] + G[w][x] < dist_so_far[x]:
-                #    dist_so_far[x] = final_dist[w] + G[w][x]
+                # calculate the new distance
+                new_value = final_dist[w] + G[w][x]
+
+                if x not in dist_dict:
+                    # if the node is not in the heap, add it to both heap and dictionary
+                    node = heap_node(x, new_value)
+                    add_to_heap(dist_so_far, node)
+                    dist_dict[x] = node
+                elif new_value < dist_dict[x].value:
+                    # if it is in the heap and the new value is smaller
+                    # change it\s value and balance the heap
+                    dist_dict[x].value = new_value
+                    up_heapify(dist_so_far, dist_dict[x].index)
     return final_dist
 
 ############
