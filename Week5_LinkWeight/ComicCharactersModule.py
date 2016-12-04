@@ -1,5 +1,6 @@
 import unittest
 import csv
+from DijkstraHeapModule import dijkstra_extended
 
 def make_link(G, node1, node2):
     if node1 not in G:
@@ -42,16 +43,45 @@ def find_strongest_link(char_graph):
 
     return strongest_link
 
+def find_path_diffs(char_graph, node):
+    (number_hops, path_hops) = dijkstra_extended(char_graph, node, lambda x : 1.0)
+    (number_weight, path_weight) = dijkstra_extended(char_graph, node, lambda x : 1.0/x)
+    diff_count = 0
+    diffs = []
+    for (co_char, path) in path_hops.items():
+        if len(path) != len(path_weight[co_char]):
+            diff_count += 1
+            diffs.append((path, path_weight[co_char]))
+    return diffs
 
 class test_comic_characters(unittest.TestCase):
-    def test_strongest_link(self):
-        (characters, full_graph) = read_file('marvel_chars.tsv')
-        chars_graph = create_characters_graph(full_graph, characters)
-        strongest_link = find_strongest_link(chars_graph)
+    #def test_strongest_link(self):
+    #    (characters, full_graph) = read_file('marvel_chars.tsv')
+    #    char_graph = create_characters_graph(full_graph, characters)
+    #    strongest_link = find_strongest_link(char_graph)
 
-        try:
-            self.assertEqual(strongest_link, ('HUMAN TORCH/JOHNNY S', 'THING/BENJAMIN J. GR'))
-            pass
-        except:
-            self.assertEqual(strongest_link, ('THING/BENJAMIN J. GR', 'HUMAN TORCH/JOHNNY S'))
-            pass
+    #    try:
+    #        self.assertEqual(strongest_link, ('HUMAN TORCH/JOHNNY S', 'THING/BENJAMIN J. GR'))
+    #        pass
+    #    except:
+    #        self.assertEqual(strongest_link, ('THING/BENJAMIN J. GR', 'HUMAN TORCH/JOHNNY S'))
+    #        pass
+
+    #def test_weighted_cases(self):
+    #    (characters, full_graph) = read_file('marvel_chars.tsv')
+    #    char_graph = create_characters_graph(full_graph, characters)
+    #    node = 'SPIDER-MAN/PETER PAR'
+    #    co_char = 'YAP'
+    #    (number_hops, path_hops) = dijkstra_extended(char_graph, node, lambda x : 1.0)
+    #    (number_weight, path_weight) = dijkstra_extended(char_graph, node, lambda x : 1.0/x)
+
+    #    self.assertNotEqual(len(path_hops[co_char]), len(path_weight[co_char]))
+
+    def test_weighted_graph(self):
+        (characters, full_graph) = read_file('marvel_chars.tsv')
+        char_graph = create_characters_graph(full_graph, characters)
+        char_to_check = ['SPIDER-MAN/PETER PAR', 'GREEN GOBLIN/NORMAN ', 'WOLVERINE/LOGAN ', 'PROFESSOR X/CHARLES ', 'CAPTAIN AMERICA']
+        diff_count = 0
+        for c in char_to_check:
+            diff_count += len(find_path_diffs(char_graph, c))
+        print diff_count

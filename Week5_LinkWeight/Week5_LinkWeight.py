@@ -1,5 +1,5 @@
 import unittest
-#from ComicCharactersModule import *
-from DijkstraHeapModule import *
+from ComicCharactersModule import *
+#from DijkstraHeapModule import *
 
 unittest.main()
