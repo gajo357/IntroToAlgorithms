@@ -30,9 +30,14 @@
     <Compile Include="DijkstraHeapModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObscurityModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Week5_LinkWeight.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="imdb-1.tsv" />
+    <Content Include="imdb-weights.tsv" />
     <Content Include="marvel_chars.tsv" />
   </ItemGroup>
   <ItemGroup>

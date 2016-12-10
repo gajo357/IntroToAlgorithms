@@ -110,6 +110,64 @@ def dijkstra_extended(G,v, weight_func = lambda x: x):
                     paths_dict[x].append(x)
     return (final_dist, paths_dict)
 
+# extended Dijkstra, keeps the path to each node
+def dijkstra_shortest_path(G, start_node, end_node, weight_func = lambda x, y: max(x, y)):
+    # distances so far
+    dist_so_far = []
+    # dictionary of nodes for quick access
+    dist_dict = {}
+    # final list of distances
+    final_dist = {}
+
+    # structures for keeping the path sa well
+    paths_dict = {}
+
+    # create the initial node with distance 0
+    node = heap_node(start_node, 0)
+
+    # add it to the heap and to the dictionary
+    dist_dict[node.name] = node
+    add_to_heap(dist_so_far, node)
+    
+    while len(dist_so_far) > 0:
+
+        # find the closes node
+        wNode = remove_min(dist_so_far)
+        w = wNode.name
+        # remove it from the dictionary for good measure
+        dist_dict.pop(w, None)
+        # lock it down!
+        final_dist[w] = wNode.value
+        if w not in paths_dict:
+            paths_dict[w] = [w]
+
+        # we have found the shortest path
+        if(w == end_node):
+            return (final_dist[w], paths_dict[w])
+
+        for x in G[w]:
+            # only need the nodes that are not over and done
+            if x not in final_dist:
+                # calculate the new distance
+                new_value = weight_func(final_dist[w], G[w][x])
+
+                if x not in dist_dict:
+                    # if the node is not in the heap, add it to both heap and dictionary
+                    node = heap_node(x, new_value)
+                    add_to_heap(dist_so_far, node)
+                    dist_dict[x] = node
+                    paths_dict[x] = list(paths_dict[w])
+                    paths_dict[x].append(x)
+                elif new_value < dist_dict[x].value:
+                    # if it is in the heap and the new value is smaller
+                    # change it\s value and balance the heap
+                    dist_dict[x].value = new_value
+                    up_heapify(dist_so_far, dist_dict[x].index)
+                    paths_dict[x] = list(paths_dict[w])
+                    paths_dict[x].append(x)
+
+    return (final_dist[end_node], paths_dict[end_node])
+
 
 class test_dijkstra(unittest.TestCase):
     def test(self):
