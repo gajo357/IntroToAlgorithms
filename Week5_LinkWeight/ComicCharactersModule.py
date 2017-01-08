@@ -84,4 +84,4 @@ class test_comic_characters(unittest.TestCase):
         diff_count = 0
         for c in char_to_check:
             diff_count += len(find_path_diffs(char_graph, c))
-        print diff_count
+        print(diff_count)

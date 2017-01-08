@@ -166,6 +166,8 @@ def dijkstra_shortest_path(G, start_node, end_node, weight_func = lambda x, y: m
                     paths_dict[x] = list(paths_dict[w])
                     paths_dict[x].append(x)
 
+    if(end_node not in final_dist or end_node not in paths_dict):
+        return (None, None)
     return (final_dist[end_node], paths_dict[end_node])
 
 
