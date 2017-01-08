@@ -39,24 +39,25 @@ def is_connected(i, j):
 #######
 # Testing
 #
-def test():
-    G = {'a':{'b':1},
-         'b':{'a':1},
-         'c':{'d':1},
-         'd':{'c':1},
-         'e':{}}
-    process_graph(G)
-    assert is_connected('a', 'b') == True
-    assert is_connected('a', 'c') == False
+class test_preprocess(unittest.TestCase):
+    def test(self):
+        G = {'a':{'b':1},
+             'b':{'a':1},
+             'c':{'d':1},
+             'd':{'c':1},
+             'e':{}}
+        process_graph(G)
+        self.assertTrue(is_connected('a', 'b'))
+        self.assertFalse(is_connected('a', 'c'))
 
-    G = {'a':{'b':1, 'c':1},
-         'b':{'a':1},
-         'c':{'d':1, 'a':1},
-         'd':{'c':1},
-         'e':{}}
-    process_graph(G)
-    assert is_connected('a', 'b') == True
-    assert is_connected('a', 'c') == True
-    assert is_connected('a', 'e') == False
+        G = {'a':{'b':1, 'c':1},
+             'b':{'a':1},
+             'c':{'d':1, 'a':1},
+             'd':{'c':1},
+             'e':{}}
+        process_graph(G)
+        self.assertTrue(is_connected('a', 'b'))
+        self.assertTrue(is_connected('a', 'c'))
+        self.assertFalse(is_connected('a', 'e'))
 
 
