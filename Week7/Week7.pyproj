@@ -24,6 +24,9 @@
     <Compile Include="BipartiteMarvelModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DistanceOracleModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="FeelTheLoveModule.py">
       <SubType>Code</SubType>
     </Compile>

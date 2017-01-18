@@ -60,7 +60,7 @@ def make_link(G, node1, node2, w):
     return G
 
 # extended Dijkstra, keeps the path to each node
-def dijkstra_extended(G,v, weight_func = lambda x: x):
+def dijkstra_extended(G, v, weight_func = lambda x: x):
     # distances so far
     dist_so_far = []
     # dictionary of nodes for quick access
