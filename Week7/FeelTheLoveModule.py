@@ -105,9 +105,9 @@ class test_feelthelove(unittest.TestCase):
              'f':{}}
 
         path = feel_the_love(G, 'a', 'b')
-        self.assertEquals(score_of_path(G, path), 2)
+        self.assertEqual(score_of_path(G, path), 2)
 
         path = feel_the_love(G, 'a', 'f')
-        self.assertEquals(path, None)
+        self.assertEqual(path, None)
 
     

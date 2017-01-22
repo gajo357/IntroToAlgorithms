@@ -182,8 +182,8 @@ class test_dijkstra(unittest.TestCase):
             make_link(G, i, j, k)
 
         dist = dijkstra(G, a)
-        self.assertEquals(dist[g], 8) #(a -> d -> e -> g)
-        self.assertEquals(dist[b], 11) #(a -> d -> e -> g -> f -> b)
+        self.assertEqual(dist[g], 8) #(a -> d -> e -> g)
+        self.assertEqual(dist[b], 11) #(a -> d -> e -> g -> f -> b)
 
     
 

@@ -1,9 +1,10 @@
 import unittest
 from math import log, ceil
 from random import randint
+from copy import deepcopy
 from collections import deque
-from HeapWithClassModule import *
-from DijkstraHeapModule import *
+from HeapWithClassModule import heap_node, add_to_heap, up_heapify, remove_min
+from DijkstraHeapModule import dijkstra_extended
 
 # 
 # In the shortest-path oracle described in Andrew Goldberg's
@@ -37,19 +38,22 @@ def add_one_degree(heap_dict, heap, node):
         heap_dict[node].value = 1.0/(1.0/heap_dict[node].value + 1)
         up_heapify(heap, heap_dict[node].index)
 
-def get_top_hubs(graph, root, no_hubs):
+def get_top_hubs(graph, nodes, no_hubs = 1):
     # count degree number for each node
     heap_dict = {}
     heap = []
-    for nodeA, edges in graph.items():
-        for nodeB in edges.keys():
+    node_indexes = {}
+    for i in range(len(nodes)):
+        nodeA = nodes[i]
+        node_indexes[nodeA] = i
+        for nodeB in graph[nodeA].keys():
             add_one_degree(heap_dict, heap, nodeA) 
             add_one_degree(heap_dict, heap, nodeB) 
 
-    hubs = [root]
-    for i in range(2, no_hubs):
-        hubs.append(remove_min(heap).name)
-    return hubs
+    for i in range(no_hubs):
+        hub = remove_min(heap)
+        yield hub.name
+    #return hubs
 
 def max_labels(labels):
     return max(len(labels[u]) for u in labels)
@@ -57,120 +61,94 @@ def max_labels(labels):
 def labels_needed(G):
     return int(ceil(log(len(G) + 1, 2)))
 
-def determine_tree_root(G):
-    depth = labels_needed(G)
+def determine_tree_root(G, max_depth):
     min_dist = None
     root_node_data = None
+    root_node_datas = {}
     for node in G.keys():
         (distances, path) = dijkstra_extended(G, node)
         max_distance = max(len(path[n]) for n in G.keys()) 
         # if the distance of this node to every other node in the tree is smaller 
         # then the maximum allowed distance, this is the root node of the tree
-        if max_distance <= depth:
-            return (node, distances, path)
+        #if max_distance <= max_depth:
+        #    return (node, distances, path)
         if min_dist is None or max_distance < min_dist:
             min_dist = max_distance
             root_node_data = (node, distances, path)
+            root_node_datas = {}
+            root_node_datas[node] = root_node_data
+        elif min_dist == max_distance:
+            root_node_datas[node] = (node, distances, path)
+
+    # if there is a choice, take the more central one
+    if min_dist > max_depth and len(root_node_datas) > 1:
+        for hub in get_top_hubs(G, [node for (node, d, p) in root_node_datas.values()]):
+            return root_node_datas[hub]
 
     return root_node_data
 
-def add_label(labels, node1, node2, distance, node2_not_root = True):
-    if node2 in labels and node1 in labels[node2]:
-        if node2_not_root:
-            # there is a connection already
-            return
-        del labels[node2][node1]
-    if node2_not_root:        
-        if node1 in labels:
-            # if node2 has less labels, we add labels to it rather then to node1
-            if node2 not in labels or len(labels[node1]) > len(labels[node2]):
-                add_label(labels, node2, node1, distance)
-                return
+def make_link(G, node1, node2, weight=1):
+    if node1 not in G:
+        G[node1] = {}
+    (G[node1])[node2] = weight
+    if node2 not in G:
+        G[node2] = {}
+    (G[node2])[node1] = weight
+    return G
 
-    if node1 not in labels:
-        labels[node1] = {}
-    
-    labels[node1][node2] = distance
+def mark_component(G, node):
+    marked = {}
+    new_graph = {}
+    open_list = [node]    
+    while len(open_list) > 0:
+        current_node = open_list.pop()
+        marked[current_node] = True
+        for neighbor in G[current_node]:
+            make_link(new_graph, current_node, neighbor, G[current_node][neighbor])
+            if neighbor not in marked:
+                open_list.append(neighbor)
 
-def connect_the_chain(G, path, max_labels, labels):
-    if len(path) == 1:
-        return
+    return new_graph
 
-    if max_labels == 0:
-        return
-
-    if max_labels >= len(path) - 1:
-        # there is enough labels for all connections
-        for i in range(len(path) - 1):
-            distance = 0
-            for j in range(i, len(path) - 1):
-                distance += G[path[j]][path[j + 1]]
-                add_label(labels, path[i], path[j + 1], distance)
-                add_label(labels, path[j + 1], path[i], distance)
-        return
-
-    if len(path) == 3:
-        add_label(labels, path[0], path[1], G[path[0]][path[1]])
-        add_label(labels, path[2], path[1], G[path[2]][path[1]])
-        return
-
-    # new root is the center of the chain
-    root_index = len(path)/2 
-    root = path[root_index]
-    # connect every node to the root
-    distance = 0
-    for i in range(root_index - 1, -1, -1):
-        distance += G[path[i]][path[i + 1]]
-        add_label(labels, path[i], root, distance, False)
-
-    distance = 0
-    for i in range(root_index + 1, len(path)):
-        distance += G[path[i]][path[i - 1]]
-        add_label(labels, path[i], root, distance, False)
-
-    connect_the_chain(G, path[:root_index - 1], max_labels - 1, labels)
-    connect_the_chain(G, path[root_index + 1:], max_labels - 1, labels)
-    pass
+def split_graph(graph, root):
+    # find connections of root
+    nodes = list(graph[root].keys())
+    for node in nodes:
+        del graph[node][root]
+        del graph[root][node]
+        yield mark_component(graph, node)
 
 def create_labels(G):
-    # find root and shortest paths to the root
-    (root, root_distances, root_path) = determine_tree_root(G)
-    max_labels = labels_needed(G)
-
     labels = {}
-    labels[root] = {}
-    labels[root][root] = 0
-    chaines_checked = []
-    for node in G.keys():
-        if node == root:
-            continue
-        # add a node, add the root
-        distance = root_distances[node]
-        prev_node = root
 
-        add_label(labels, node, node, 0, False)
-        add_label(labels, node, root, distance, False)
+    # connect everyone with itself
+    for node in G.keys():
+        labels[node] = {}
+        labels[node][node] = 0
+
+    max_labels = labels_needed(G)
+    sub_graphs = [(deepcopy(G), max_labels)]
+    while(len(sub_graphs) > 0):
+        # take the first sub graph from the list
+        (graph, max_depth) = sub_graphs.pop()
         
-        if len(root_path[node]) > max_labels:
-            # connect the nodes on this route
-            # we already used the root and node, so there are 2 labels less to use
-            skip_node = False
-            for chain in chaines_checked:
-                if node in chain:
-                    skip_node = True
-                    break
-            if skip_node:
+        # the graph has only one node
+        if len(graph) < 2:
+            continue
+        
+        # find it's root
+        (root, root_distances, root_path) = determine_tree_root(graph, max_depth)
+        
+        # connect all nodes to the root
+        for node in graph.keys():
+            if node == root:
                 continue
-            connect_the_chain(G, root_path[node][1:], max_labels - 2, labels)
-            chaines_checked.append(root_path[node])
-        else:
-            # otherwise just connect all nodes on the path
-            for hub in root_path[node]:
-                if hub == node or hub == root:
-                    continue
-                distance -= G[prev_node][hub]
-                add_label(labels, node, hub, distance)
-                prev_node = hub
+            labels[node][root] = root_distances[node]
+
+        # split the subgraph in the root node
+        for sub_graph in split_graph(graph, root):
+            if len(sub_graph) > 0:
+                sub_graphs.append((sub_graph, max_depth - 1))
 
     return labels
 
@@ -215,7 +193,7 @@ def get_distances(G, labels):
             label_dest = labels[destination]
             # and then merge them together, saving the
             # shortest distance
-            for intermediate_node, dist in label_node.iteritems():
+            for intermediate_node, dist in label_node.items():
                 # see if intermediate_node is our destination
                 # if it is we can stop - we know that is
                 # the shortest path
@@ -230,15 +208,6 @@ def get_distances(G, labels):
             s_distances[destination] = shortest
         distances[start] = s_distances
     return distances
-
-def make_link(G, node1, node2, weight=1):
-    if node1 not in G:
-        G[node1] = {}
-    (G[node1])[node2] = weight
-    if node2 not in G:
-        G[node2] = {}
-    (G[node2])[node1] = weight
-    return G
 
 def distance(tree, w, u):
     if w==u: return 0
@@ -327,7 +296,7 @@ class test_distance_oracle(unittest.TestCase):
         self.assertEqual(distances[5][9], 8)
 
     def test_random_test(self):
-        N = 100
+        N = 10
         n0 = 20
         n1 = 100
 

@@ -114,7 +114,7 @@ class test_obscurity(unittest.TestCase):
 
         for key, value in test.items():
             (score, path) = dijkstra_shortest_path(actors_graph, key[0], key[1])
-            self.assertEquals(score, value)
+            self.assertEqual(score, value)
 
         # Change the `None` values in this dictionary to be the obscurity score
         # of the least obscure path between the two actors
