@@ -33,7 +33,13 @@
     <Compile Include="FindBipartiteModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FindingFavorModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="FindingTheBestFlightModule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="heap.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="marvel.py">
