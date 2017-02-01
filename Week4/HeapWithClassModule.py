@@ -1,8 +1,4 @@
-from HeapModule import parent
-from HeapModule import one_child
-from HeapModule import right_child
-from HeapModule import left_child
-from HeapModule import is_leaf
+from HeapModule import parent, one_child, right_child, left_child, is_leaf
 
 class heap_node:
     def __init__(self, name, value):

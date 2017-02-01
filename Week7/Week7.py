@@ -7,5 +7,6 @@ from PreprocessGraphModule import *
 #from DistanceOracleModule import *
 from FindingFavorModule import *
 from heap import *
+from TopTwoModule import *
 
 unittest.main()

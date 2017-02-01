@@ -48,6 +48,9 @@
     <Compile Include="PreprocessGraphModule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TopTwoModule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Week7.py" />
   </ItemGroup>
   <ItemGroup>
